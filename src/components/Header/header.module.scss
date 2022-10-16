@@ -1,1 +1,9 @@
-// TODO
+.headerContainer {
+  background-color: var(--gray-900);
+  display: flex;
+  align-items: center;
+  max-width: 716px;
+  height: 6.5625rem;
+  padding-inline: 1rem;
+  margin-inline: auto;
+}
