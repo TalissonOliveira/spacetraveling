@@ -1,13 +1,27 @@
 .container {
   max-width: 716px;
   min-height: 100vh;
-  padding-inline: 1rem;
+  padding: 2.5rem 1rem 5rem;
   margin-inline: auto;
-  padding-top: 40px;
 
   header {
     margin-bottom: 25px;
     padding-inline: 0;
+  }
+
+  .more {
+    background: transparent;
+    color: var(--pink-500);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 22px;
+    border: none;
+
+    transition: filter .1s;
+
+    &:hover {
+      filter: brightness(.9);
+    }
   }
 }
 

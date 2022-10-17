@@ -31,6 +31,15 @@ interface HomeProps {
 
 export default function Home({ postsPagination }: HomeProps) {
   const [posts, setPosts] = useState(postsPagination.results)
+  const [nextPage, setNextPage] = useState(postsPagination.next_page)
+
+  async function loadMorePosts() {
+    const response = await fetch(`${nextPage}`)
+    const data: PostPagination = await response.json()
+
+    setPosts(prevState => [...prevState, ...data.results])
+    setNextPage(data.next_page)
+  }
 
   return (
     <>
@@ -71,6 +80,15 @@ export default function Home({ postsPagination }: HomeProps) {
               </Link>
             ))}
           </div>
+
+          {nextPage && (
+            <button
+              className={styles.more}
+              onClick={loadMorePosts}
+            >
+              Carregar mais posts
+            </button>
+          )}
         </main>
       </div>
     </>
