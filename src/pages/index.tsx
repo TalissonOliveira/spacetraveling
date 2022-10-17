@@ -1,11 +1,12 @@
+import Head from 'next/head';
+import Link from 'next/link';
 import { GetStaticProps } from 'next';
-import Head from 'next/head'
-import Link from 'next/link'
-import Header from '../components/Header';
-
+import { useState } from 'react';
 import { FiCalendar, FiUser } from 'react-icons/fi'
-
+import { format } from 'date-fns';
 import { getPrismicClient } from '../services/prismic';
+import Header from '../components/Header';
+import ptBR from 'date-fns/locale/pt-BR';
 
 import styles from './home.module.scss';
 
@@ -28,7 +29,9 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home() {
+export default function Home({ postsPagination }: HomeProps) {
+  const [posts, setPosts] = useState(postsPagination.results)
+
   return (
     <>
       <Head>
@@ -40,40 +43,33 @@ export default function Home() {
 
         <main>
           <div className={styles.posts}>
-            <Link href={'/'}>
-              <a>
-                <strong>Como utilizar Hooks</strong>
-                <p>Pensando em  sincronização em vez de ciclos de vida</p>
+            {posts.map(post => (
+              <Link key={post.uid} href={`/post/${post.uid}`}>
+                <a>
+                  <strong>{post.data.title}</strong>
+                  <p>{post.data.subtitle}</p>
 
-                <div className={styles.info}>
-                  <div>
-                    <FiCalendar size={20} />
-                    <time>15 Mar 2021</time>
+                  <div className={styles.info}>
+                    <div>
+                      <FiCalendar size={20} />
+                      <time>
+                        {format(
+                          new Date(post.first_publication_date),
+                          'dd MMM yyyy',
+                          {
+                            locale: ptBR,
+                          }
+                        )}
+                      </time>
+                    </div>
+                    <div>
+                      <FiUser size={20} />
+                      <span>{post.data.author}</span>
+                    </div>
                   </div>
-                  <div>
-                    <FiUser size={20} />
-                    <span>Talisson Oliveira</span>
-                  </div>
-                </div>
-              </a>
-            </Link>
-            <Link href={'/'}>
-              <a>
-                <strong>Como utilizar Hooks</strong>
-                <p>Pensando em  sincronização em vez de ciclos de vida</p>
-
-                <div className={styles.info}>
-                  <div>
-                    <FiCalendar size={20} />
-                    <time>15 Mar 2021</time>
-                  </div>
-                  <div>
-                    <FiUser size={20} />
-                    <span>Talisson Oliveira</span>
-                  </div>
-                </div>
-              </a>
-            </Link>
+                </a>
+              </Link>
+            ))}
           </div>
         </main>
       </div>
@@ -81,9 +77,16 @@ export default function Home() {
   )
 }
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient({});
-//   // const postsResponse = await prismic.getByType(TODO);
+export const getStaticProps: GetStaticProps  = async () => {
+  const prismic = getPrismicClient({});
+  const postsResponse = await prismic.getByType("posts", {
+    pageSize: 5,
+  });
 
-//   // TODO
-// };
+  return {
+    props: {
+      postsPagination: postsResponse,
+      revalidate: 60 * 5 // 5 minutes
+    }
+  }
+};
