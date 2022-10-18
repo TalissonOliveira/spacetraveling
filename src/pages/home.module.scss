@@ -71,3 +71,32 @@
     }
   }
 }
+
+.loading {
+  span {
+    display: inline-block;
+    font-size: 3rem;
+    line-height: 0%;
+
+    animation: loading .6s ease-in-out infinite;
+
+    &:nth-of-type(2) {
+      animation-delay: .2s;
+    }
+    &:nth-of-type(3) {
+      animation-delay: .4s;
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

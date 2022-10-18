@@ -32,13 +32,19 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps) {
   const [posts, setPosts] = useState(postsPagination.results)
   const [nextPage, setNextPage] = useState(postsPagination.next_page)
+  const [isLoading, setIsLoading] = useState(false)
 
-  async function loadMorePosts() {
-    const response = await fetch(`${nextPage}`)
-    const data: PostPagination = await response.json()
+  function loadMorePosts() {
+    setIsLoading(true)
 
-    setPosts(prevState => [...prevState, ...data.results])
-    setNextPage(data.next_page)
+    setTimeout(async () => {
+      const response = await fetch(`${nextPage}`)
+      const data: PostPagination = await response.json()
+
+      setPosts(prevState => [...prevState, ...data.results])
+      setNextPage(data.next_page)
+      setIsLoading(false)
+    }, 700);
   }
 
   return (
@@ -81,13 +87,21 @@ export default function Home({ postsPagination }: HomeProps) {
             ))}
           </div>
 
-          {nextPage && (
+          {nextPage && !isLoading && (
             <button
               className={styles.more}
               onClick={loadMorePosts}
             >
               Carregar mais posts
             </button>
+          )}
+
+          {isLoading && (
+            <div className={styles.loading}>
+              <span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </div>
           )}
         </main>
       </div>
