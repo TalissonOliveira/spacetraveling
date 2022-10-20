@@ -38,13 +38,20 @@ export default function Home({ postsPagination }: HomeProps) {
     setIsLoading(true)
 
     setTimeout(async () => {
-      const response = await fetch(`${nextPage}`)
-      const data: PostPagination = await response.json()
+      try {
+        const response = await fetch(`${nextPage}`)
+        const data: PostPagination = await response.json()
 
-      setPosts(prevState => [...prevState, ...data.results])
-      setNextPage(data.next_page)
-      setIsLoading(false)
-    }, 700);
+        setPosts(prevState => [...prevState, ...data.results])
+        setNextPage(data.next_page)
+
+      } catch (error) {
+        console.log('Ocorreu um erro ao tentar carregar mais posts.')
+
+      } finally {
+        setIsLoading(false)
+      }
+    }, 200);
   }
 
   return (
