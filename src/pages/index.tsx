@@ -120,6 +120,10 @@ export const getStaticProps: GetStaticProps  = async () => {
   const prismic = getPrismicClient({});
   const postsResponse = await prismic.getByType("posts", {
     pageSize: 5,
+    orderings: {
+      field: 'document.first_publication_date',
+      direction: 'desc'
+    }
   });
 
   return {
