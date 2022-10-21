@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link'
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
@@ -11,6 +12,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import styles from './post.module.scss';
 
 interface Post {
+  uid?: string;
   first_publication_date: string | null;
   data: {
     title: string;
@@ -29,9 +31,11 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  prevPost: Post | null;
+  nextPost: Post | null;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, prevPost, nextPost }: PostProps) {
   const router = useRouter()
 
   const estimatedReadingTime = post.data.content.reduce((acc, currentValue) => {
@@ -92,6 +96,31 @@ export default function Post({ post }: PostProps) {
           </div>
         </article>
       </main>
+      <footer className={styles.footer}>
+        <hr className={styles.divider} />
+        <div className={styles.controls}>
+          {prevPost && (
+            <div className={styles.prevPost}>
+              <Link href={prevPost.uid}>
+                {prevPost.data.title}
+              </Link>
+              <Link href={prevPost.uid}>
+                Post anterior
+              </Link>
+            </div>
+          )}
+          {nextPost && (
+            <div className={styles.nextPost}>
+              <Link href={nextPost.uid}>
+                {nextPost.data.title}
+              </Link>
+              <Link href={nextPost.uid}>
+                Próximo post
+              </Link>
+            </div>
+          )}
+        </div>
+      </footer>
     </>
   )
 }
@@ -111,14 +140,33 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params  }) => {
   const { slug } = params
 
   const prismic = getPrismicClient({});
   const response = await prismic.getByUID('posts', String(slug));
 
+  const nextPostResponse = await prismic.getByType('posts', {
+    pageSize: 1,
+    after: response.id,
+    orderings: {
+      field: 'document.first_publication_date'
+    }
+  })
+
+  const prevPostResponse = await prismic.getByType('posts', {
+    pageSize: 1,
+    after: response.id,
+    orderings: {
+      field: 'document.first_publication_date',
+      direction: 'desc'
+    }
+  })
+
   return {
     props: {
+      prevPost: nextPostResponse.results[0] || null,
+      nextPost: prevPostResponse.results[0] || null,
       post: response
     }
   }
