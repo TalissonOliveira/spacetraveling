@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { RichText } from 'prismic-dom';
 import { getPrismicClient } from '../../services/prismic';
 import Header from '../../components/Header';
+import Comments from '../../components/Comments'
 import ptBR from 'date-fns/locale/pt-BR';
 
 import styles from './post.module.scss';
@@ -120,6 +121,8 @@ export default function Post({ post, prevPost, nextPost }: PostProps) {
             </div>
           )}
         </div>
+
+        <Comments />
       </footer>
     </>
   )
