@@ -122,7 +122,7 @@ export default function Post({ post, prevPost, nextPost }: PostProps) {
           )}
         </div>
 
-        <Comments />
+        <Comments postSlug={post.uid} />
       </footer>
     </>
   )

@@ -2,7 +2,11 @@ import { useEffect } from 'react';
 
 const commentNodeId = 'comments';
 
-export default function Comments() {
+interface CommentsProps {
+  postSlug: string;
+}
+
+export default function Comments({ postSlug }: CommentsProps) {
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'https://utteranc.es/client.js'
@@ -19,7 +23,7 @@ export default function Comments() {
     return () => {
       scriptParentNode.removeChild(scriptParentNode.firstChild)
     }
-  }, [])
+  }, [postSlug])
 
   return <div id={commentNodeId} />
 }
