@@ -39,6 +39,12 @@ interface PostProps {
 export default function Post({ post, prevPost, nextPost }: PostProps) {
   const router = useRouter()
 
+  if (router.isFallback) {
+    return (
+      <div>Carregando...</div>
+    )
+  }
+
   const estimatedReadingTime = post.data.content.reduce((acc, currentValue) => {
     const numberOfWordsInTheTitle = currentValue.heading.split(' ').length
     const numberOfWordsInTheBody = RichText.asText(currentValue.body).split(' ').length
@@ -46,12 +52,6 @@ export default function Post({ post, prevPost, nextPost }: PostProps) {
 
     return acc + Math.ceil((numberOfWordsInTheTitle + numberOfWordsInTheBody) / averageWordsPerMinute)
   }, 0)
-
-  if (router.isFallback) {
-    return (
-      <div>Carregando...</div>
-    )
-  }
 
   return (
     <>
