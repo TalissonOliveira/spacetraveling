@@ -12,12 +12,13 @@
 
 <p align="center">
     <a href="#book-sobre-o-desafio">Sobre o desafio</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+    <a href="#cloud-deploy">Deploy</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
     <a href="#rocket-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
     <a href="#test_tube-testes">Testes</a>
 </p
 
 <p align="center">
-    <img alt="Preview" src="https://ik.imagekit.io/imagens/SpaceTraveling/spacetraveling-preview_cV5bRyBkZ.gif">
+    <img alt="Preview" src="./.github/spacetraveling-preview.gif">
 </p>
 
 
@@ -38,6 +39,11 @@ No desafio, foi desenvolvido um blog do zero utilizando o framework Next.js, com
 - Comentários com Utteranc;
 - Navegação entre post anterior e próximo;
 - Informação de edição do post.
+
+
+## :cloud: Deploy
+O projeto está hospedado na [Vercel](https://vercel.com/)
+> https://spacetraveling-challenge.vercel.app/
 
 
 ## :rocket: Tecnologias
