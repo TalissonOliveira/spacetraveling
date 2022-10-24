@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Link from 'next/link'
+import Link from 'next/link';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { RichText } from 'prismic-dom';
 import { getPrismicClient } from '../../services/prismic';
 import Header from '../../components/Header';
-import Comments from '../../components/Comments'
+import Comments from '../../components/Comments';
 import ptBR from 'date-fns/locale/pt-BR';
 
 import styles from './post.module.scss';
@@ -15,6 +15,7 @@ import styles from './post.module.scss';
 interface Post {
   uid?: string;
   first_publication_date: string | null;
+  last_publication_date: string | null ;
   data: {
     title: string;
     banner: {
@@ -45,6 +46,8 @@ export default function Post({ post, prevPost, nextPost }: PostProps) {
     )
   }
 
+  const isEditedPost = post.first_publication_date !== post.last_publication_date
+
   const estimatedReadingTime = post.data.content.reduce((acc, currentValue) => {
     const numberOfWordsInTheTitle = currentValue.heading.split(' ').length
     const numberOfWordsInTheBody = RichText.asText(currentValue.body).split(' ').length
@@ -65,7 +68,7 @@ export default function Post({ post, prevPost, nextPost }: PostProps) {
 
       <main className={styles.container}>
         <article className={styles.post}>
-         <h1>{post.data.title}</h1>
+          <h1>{post.data.title}</h1>
           <div className={styles.info}>
             <div>
               <FiCalendar size={20} />
@@ -84,6 +87,18 @@ export default function Post({ post, prevPost, nextPost }: PostProps) {
               <span>{estimatedReadingTime} min</span>
             </div>
           </div>
+          {isEditedPost && (
+            <div className={styles.lastEdition}>
+              <span>
+                * editado em{' '}
+                <time>
+                  {format(new Date(post.last_publication_date), "dd MMM yyyy, 'às' HH:mm", {
+                    locale: ptBR,
+                  })}
+                </time>
+              </span>
+            </div>
+          )}
 
           <div className={styles.content}>
             {post.data.content.map(postContent => (
